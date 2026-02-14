@@ -1,0 +1,13 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { AdminProductList } from "../../../components/admin/AdminProductList";
+
+// Check for admin session happens in Layout or client-side context usually,
+// for simplicity we assume the protected route logic handles redirect if not admin/logged in (middleware or client check).
+---
+
+<Layout title="Administrar Productos | KrostyShop">
+    <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-8">
+        <AdminProductList client:only="react" />
+    </div>
+</Layout>

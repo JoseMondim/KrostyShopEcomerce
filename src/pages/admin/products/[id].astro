@@ -1,0 +1,12 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { AdminProductEditor } from "../../../components/admin/AdminProductEditor";
+
+const { id } = Astro.params;
+---
+
+<Layout title="Editar Producto | KrostyShop">
+    <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-8">
+        <AdminProductEditor client:only="react" productId={id} />
+    </div>
+</Layout>

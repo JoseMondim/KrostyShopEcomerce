@@ -1,24 +1,53 @@
 ---
-import "../styles/global.css";
+import "/src/styles/global.css";
 
 interface Props {
 	title: string;
 }
 
 const { title } = Astro.props;
+import { Navbar } from "../components/common/Navbar";
+import Footer from "../components/common/Footer.astro";
+import background from "../assets/images/background.webp";
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Tienda de Gift Cards y Recargas de Juegos" />
+		<meta
+			name="description"
+			content="Tienda de Gift Cards y Recargas de Juegos"
+		/>
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body class="bg-gray-50 min-h-screen">
-		<slot />
+	<body
+		class="text-white min-h-screen flex flex-col font-sans antialiased selection:bg-primary selection:text-white relative bg-black"
+	>
+		{/* Global Background */}
+		<div class="fixed inset-0 z-0 pointer-events-none">
+			<div class="absolute inset-0 bg-[#0a0a0a]"></div>
+			<img
+				src={background.src}
+				alt=""
+				class="absolute inset-0 w-full h-full object-cover opacity-60"
+			/>
+			<div
+				class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a]/50"
+			>
+			</div>
+		</div>
+
+		{/* Content Wrapper to ensure it sits above background */}
+		<div class="relative z-10 flex flex-col min-h-screen">
+			<Navbar client:load />
+			<main class="flex-grow">
+				<slot />
+			</main>
+			<Footer />
+		</div>
 	</body>
 </html>

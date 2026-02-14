@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { AuthComponent } from "../components/auth/AuthComponent";
+---
+
+<Layout title="Iniciar Sesión | KrostyShop">
+  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+      <AuthComponent client:load />
+    </div>
+  </div>
+</Layout>

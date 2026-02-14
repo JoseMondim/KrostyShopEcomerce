@@ -1,0 +1,102 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { ProductCard } from "../../components/commerce/ProductCard";
+import { supabase } from "../../lib/supabase";
+
+export async function getStaticPaths() {
+    return [
+        { params: { category: "all" } },
+        { params: { category: "gift-cards" } },
+        { params: { category: "Juegos" } },
+        { params: { category: "Consolas" } },
+        { params: { category: "Suscripciones" } },
+        { params: { category: "Juegos Móviles" } },
+    ];
+}
+
+const { category } = Astro.params;
+const title = category === "all" ? "Todo el Catálogo" : `Catálogo: ${category}`;
+
+let products = [];
+let error = null;
+
+if (supabase) {
+    let query = supabase.from("products").select("*");
+
+    if (category !== "all" && category !== "gift-cards") {
+        // 'gift-cards' is a loose match for now, or we can map it
+        query = query.eq("category", category);
+    }
+
+    const { data, error: dbError } = await query;
+    if (dbError) {
+        console.error(dbError);
+        error = dbError.message;
+    } else {
+        products = data || [];
+    }
+}
+---
+
+<Layout title={`${title} | KrostyShop`}>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-white capitalize">{title}</h1>
+        </div>
+
+        {/* Category Quick Links */}
+        <div class="flex gap-2 overflow-x-auto pb-6 mb-4">
+            <a
+                href="/catalog/all"
+                class={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${category === "all" ? "bg-primary text-black" : "bg-[#18181b] text-gray-300 hover:text-white hover:bg-[#27272a]"}`}
+                >Todo</a
+            >
+            <a
+                href="/catalog/Juegos"
+                class={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${category === "Juegos" ? "bg-primary text-black" : "bg-[#18181b] text-gray-300 hover:text-white hover:bg-[#27272a]"}`}
+                >Juegos</a
+            >
+            <a
+                href="/catalog/Consolas"
+                class={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${category === "Consolas" ? "bg-primary text-black" : "bg-[#18181b] text-gray-300 hover:text-white hover:bg-[#27272a]"}`}
+                >Consolas</a
+            >
+            <a
+                href="/catalog/Suscripciones"
+                class={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${category === "Suscripciones" ? "bg-primary text-black" : "bg-[#18181b] text-gray-300 hover:text-white hover:bg-[#27272a]"}`}
+                >Suscripciones</a
+            >
+        </div>
+
+        {
+            error && (
+                <p class="text-red-500">
+                    Error cargando productos: {error}. Asegúrate de haber
+                    ejecutado el SQL de los productos.
+                </p>
+            )
+        }
+
+        {
+            !error && products.length === 0 && (
+                <div class="text-center py-20">
+                    <p class="text-gray-500 text-lg">
+                        No se encontraron productos en esta categoría.
+                    </p>
+                    <p class="text-sm text-gray-400 mt-2">
+                        Prueba ejecutar el script `seed_products.sql` en
+                        Supabase.
+                    </p>
+                </div>
+            )
+        }
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {
+                products.map((product) => (
+                    <ProductCard client:idle product={product} />
+                ))
+            }
+        </div>
+    </div>
+</Layout>

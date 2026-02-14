@@ -1,17 +1,271 @@
 ---
+import Layout from "../layouts/Layout.astro";
+import { ProductCard } from "../components/commerce/ProductCard";
 
+import { supabase } from "../lib/supabase";
+import background from "../assets/images/background.webp";
+import bannerCharacter from "../assets/images/bannerGiftCards.webp";
+
+// Mock Data (fallback)
+const MOCK_PRODUCTS = [
+	{
+		id: "1",
+		name: "Steam Gift Card $20",
+		price: 20.0,
+		image_url:
+			"https://images.unsplash.com/photo-1606166325969-9226cb582d24?q=80&w=1000&auto=format&fit=crop",
+		category: "Juegos",
+		description: "Recarga tu saldo de Steam al instante.",
+	},
+	{
+		id: "2",
+		name: "PlayStation Store $50",
+		price: 50.0,
+		image_url:
+			"https://images.unsplash.com/photo-1606144042614-b2413e99c03d?q=80&w=1000&auto=format&fit=crop",
+		category: "Consolas",
+		description: "Compra juegos y complementos en PS Store.",
+	},
+	{
+		id: "4",
+		name: "Xbox Game Pass Ultimate",
+		price: 15.0,
+		image_url:
+			"https://images.unsplash.com/photo-1627856014759-2a01d6e2dd2e?q=80&w=1000&auto=format&fit=crop",
+		category: "Suscripciones",
+	},
+	{
+		id: "3",
+		name: "Free Fire 100 Diamantes",
+		price: 1.2,
+		image_url:
+			"https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop",
+		category: "Juegos Móviles",
+		description: "Diamantes para Free Fire.",
+	},
+];
+
+let GIFT_CARDS = MOCK_PRODUCTS.filter((p) => p.category !== "Juegos Móviles"); // Fallback logic
+let GAME_RELOADS = MOCK_PRODUCTS.filter((p) => p.category === "Juegos Móviles");
+
+if (supabase) {
+	const { data, error } = await supabase.from("products").select("*");
+
+	if (!error && data && data.length > 0) {
+		GIFT_CARDS = data.filter((p) => p.category === "gift_cards");
+		GAME_RELOADS = data.filter((p) => p.category === "game_reloads");
+	}
+}
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="KrostyShop | Gift Cards y Recargas">
+	{/* Hero Section */}
+	<div
+		class="relative w-full min-h-[600px] flex items-center overflow-hidden"
+	>
+		{/* Background Image */}
+		<div class="absolute inset-0 z-0">
+			<img
+				src={background.src}
+				alt="Background"
+				class="w-full h-full object-cover opacity-90"
+			/>
+			<div
+				class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"
+			>
+			</div>
+		</div>
+
+		<div
+			class="relative z-10 max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+		>
+			{/* Left Content */}
+			<div class="space-y-6 pt-12 lg:pt-0">
+				<h1
+					class="text-5xl md:text-7xl font-black text-white leading-tight tracking-tight"
+				>
+					VENTA <span
+						class="text-xl md:text-3xl block font-medium tracking-widest mb-1 text-gray-300"
+						>DE</span
+					>
+					<span
+						class="text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#06b6d4]"
+						>GIFT CARDS</span
+					>
+				</h1>
+				<h2
+					class="text-xl md:text-2xl font-bold text-white tracking-wide uppercase border-l-4 border-primary pl-4"
+				>
+					Para todas las tiendas digitales
+				</h2>
+
+				<p class="max-w-xl text-gray-400 text-sm leading-relaxed">
+					Obtén tus Gift Cards y recargas favoritas de forma rápida,
+					segura y al mejor precio. ¡Disfruta de tus juegos y
+					servicios sin interrupciones!
+				</p>
+
+				{/* Brand Logos Row */}
+				<div class="pt-8">
+					<div
+						class="flex flex-wrap gap-6 items-center opacity-80 grayscale hover:grayscale-0 transition-all duration-300"
+					>
+						{
+							/* Using simple text placeholders or svgs for brands if assets not available */
+						}
+						<div class="flex items-center gap-2">
+							<span class="text-white font-bold"
+								><span class="text-[#34A853]">Google</span> Play</span
+							>
+						</div>
+						<div class="flex items-center gap-2">
+							<span class="text-white font-bold">Apple Store</span
+							>
+						</div>
+						<div class="flex items-center gap-2">
+							<span class="text-white font-bold">Microsoft</span>
+						</div>
+						<div class="flex items-center gap-2">
+							<span class="text-white font-bold tracking-widest"
+								>BLIZZARD</span
+							>
+						</div>
+						<div class="flex items-center gap-2">
+							<span class="text-white font-bold">STEAM</span>
+						</div>
+					</div>
+					<div
+						class="flex flex-wrap gap-6 items-center mt-4 opacity-80 grayscale hover:grayscale-0 transition-all duration-300"
+					>
+						<div class="flex items-center gap-2">
+							<span class="text-white font-bold">PlayStation</span
+							>
+						</div>
+						<div class="flex items-center gap-2">
+							<span
+								class="text-white font-bold ring-1 ring-white px-1 rounded"
+								>Nintendo</span
+							>
+						</div>
+						<div class="flex items-center gap-2">
+							<span class="text-white font-bold">XBOX</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* Right Image */}
+			<div
+				class="relative hidden lg:flex justify-end items-center h-full"
+			>
+				<img
+					src={bannerCharacter.src}
+					alt="Characters"
+					class="w-full max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(59,130,246,0.3)] transform hover:scale-105 transition-transform duration-700"
+				/>
+			</div>
+		</div>
+	</div>
+
+	{/* Gift Cards Section */}
+	<section
+		class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-16 relative z-10"
+	>
+		<div class="flex justify-between items-end mb-8">
+			<div>
+				<h2
+					class="text-3xl md:text-4xl font-black text-white uppercase tracking-wide"
+				>
+					<span class="text-[#3b82f6]">Tarjetas</span> de Regalo
+				</h2>
+				<p
+					class="text-gray-400 font-bold tracking-widest mt-2 uppercase text-sm"
+				>
+					Saldo para tus plataformas favoritas
+				</p>
+			</div>
+			<a
+				href="/store?category=gift_cards"
+				class="hidden md:flex items-center gap-2 text-primary hover:text-white transition-colors font-bold uppercase tracking-wider text-sm"
+			>
+				Ver todas <span class="text-xl">→</span>
+			</a>
+		</div>
+
+		<div
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+		>
+			{
+				GIFT_CARDS.length > 0 ? (
+					GIFT_CARDS.slice(0, 5).map((product) => (
+						<ProductCard client:idle product={product} />
+					))
+				) : (
+					<p class="text-gray-500 col-span-full">
+						No hay tarjetas de regalo destacadas.
+					</p>
+				)
+			}
+		</div>
+		<div class="mt-8 text-center md:hidden">
+			<a
+				href="/store?category=gift_cards"
+				class="btn-primary inline-flex px-6 py-2 rounded-full font-bold"
+				>Ver todas</a
+			>
+		</div>
+	</section>
+
+	{/* Game Reloads Section */}
+	<section
+		class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-16 relative z-10"
+	>
+		<div class="flex justify-between items-end mb-8">
+			<div>
+				<h2
+					class="text-3xl md:text-4xl font-black text-white uppercase tracking-wide"
+				>
+					<span class="text-[#10b981]">Recargas</span> de Juegos
+				</h2>
+				<p
+					class="text-gray-400 font-bold tracking-widest mt-2 uppercase text-sm"
+				>
+					Diamantes, CP y más directo a tu cuenta
+				</p>
+			</div>
+			<a
+				href="/store?category=game_reloads"
+				class="hidden md:flex items-center gap-2 text-[#10b981] hover:text-white transition-colors font-bold uppercase tracking-wider text-sm"
+			>
+				Ver todas <span class="text-xl">→</span>
+			</a>
+		</div>
+
+		<div
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+		>
+			{
+				GAME_RELOADS.length > 0 ? (
+					GAME_RELOADS.slice(0, 5).map((product) => (
+						<ProductCard client:idle product={product} />
+					))
+				) : (
+					<p class="text-gray-500 col-span-full">
+						No hay recargas destacadas.
+					</p>
+				)
+			}
+		</div>
+		<div class="mt-8 text-center md:hidden">
+			<a
+				href="/store?category=game_reloads"
+				class="btn-primary inline-flex px-6 py-2 rounded-full font-bold"
+				>Ver todas</a
+			>
+		</div>
+	</section>
+</Layout>

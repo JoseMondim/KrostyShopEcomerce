@@ -1,0 +1,10 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { AdminOrderList } from "../../components/admin/AdminOrderList";
+---
+
+<Layout title="Admin Panel | Krosty Shop">
+    <div className="max-w-6xl mx-auto px-4 py-8">
+        <AdminOrderList client:only="react" />
+    </div>
+</Layout>

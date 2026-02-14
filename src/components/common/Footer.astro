@@ -1,0 +1,93 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-[#0a0a0a] border-t border-white/5 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      {/* Brand */}
+      <div class="col-span-1 md:col-span-2">
+        <span
+          class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
+        >
+          KrostyShop
+        </span>
+        <p class="mt-4 text-gray-500 text-sm max-w-xs">
+          Tu destino confiable para tarjetas de regalo digitales, recargas de
+          juegos y software. Entrega instantánea y segura.
+        </p>
+      </div>
+
+      {/* Links */}
+      <div>
+        <h3 class="text-sm font-bold text-white tracking-wider uppercase">
+          Tienda
+        </h3>
+        <ul class="mt-4 space-y-2">
+          <li>
+            <a
+              href="/catalog/gift-cards"
+              class="text-base text-gray-400 hover:text-primary transition-colors"
+              >Gift Cards</a
+            >
+          </li>
+          <li>
+            <a
+              href="/catalog/games"
+              class="text-base text-gray-400 hover:text-primary transition-colors"
+              >Juegos</a
+            >
+          </li>
+          <li>
+            <a
+              href="/catalog/software"
+              class="text-base text-gray-400 hover:text-primary transition-colors"
+              >Software</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      {/* Support */}
+      <div>
+        <h3 class="text-sm font-bold text-white tracking-wider uppercase">
+          Soporte
+        </h3>
+        <ul class="mt-4 space-y-2">
+          <li>
+            <a
+              href="/support"
+              class="text-base text-gray-400 hover:text-primary transition-colors"
+              >Centro de Ayuda</a
+            >
+          </li>
+          <li>
+            <a
+              href="/terms"
+              class="text-base text-gray-400 hover:text-primary transition-colors"
+              >Términos y Condiciones</a
+            >
+          </li>
+          <li>
+            <a
+              href="/privacy"
+              class="text-base text-gray-400 hover:text-primary transition-colors"
+              >Política de Privacidad</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center"
+    >
+      <p class="text-base text-gray-500">
+        &copy; {currentYear} KrostyShop. Todos los derechos reservados.
+      </p>
+      <div class="flex space-x-6 mt-4 md:mt-0">
+        {/* Social Icons could go here */}
+      </div>
+    </div>
+  </div>
+</footer>

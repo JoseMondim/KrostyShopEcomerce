@@ -1,0 +1,224 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Button } from "../../components/ui/Button";
+import { supabase } from "../../lib/supabase";
+import { ProductDetail } from "../../components/commerce/ProductDetail"; // Refactoring logic to a React component for interactivity
+
+const { slug } = Astro.params;
+
+let product = null;
+
+if (supabase) {
+    // Assuming slug might be ID or we assume slug is name for now?
+    // The previous code didn't strictly implementation getStaticPaths properly for [slug] with supabase.
+    // For now, let's try to fetch by ID or Name if available, or just mock it if missing.
+    // Since we don't have getStaticPaths for dynamic routing in SSG effectively without fetching all,
+    // and this is likely hybrid or client side, let's just fetch one.
+
+    // Implement correctly fetching by ID
+    const { data } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", slug)
+        .single();
+
+    if (data) {
+        product = data;
+    }
+}
+
+// Fallback Mock Data if DB fails or product not found
+if (!product) {
+    const MOCK_PRODUCTS = {
+        "1": {
+            id: "1",
+            name: "Steam Gift Card $20",
+            price: 20.0,
+            image_url:
+                "https://images.unsplash.com/photo-1606166325969-9226cb582d24?q=80&w=1000&auto=format&fit=crop",
+            category: "Juegos",
+            description:
+                "Recarga tu saldo de Steam al instante. Código digital válido para cuentas de región Global/USA.",
+        },
+        "2": {
+            id: "2",
+            name: "PlayStation Store $50",
+            price: 50.0,
+            image_url:
+                "https://images.unsplash.com/photo-1606144042614-b2413e99c03d?q=80&w=1000&auto=format&fit=crop",
+            category: "Consolas",
+            description:
+                "Compra juegos y complementos en PS Store. Código canjeable en cuentas USA.",
+        },
+        "3": {
+            id: "3",
+            name: "Free Fire 100 Diamantes",
+            price: 1.2,
+            image_url:
+                "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop",
+            category: "Juegos Móviles",
+            description:
+                "Diamantes para Free Fire. Recarga directa a tu ID de jugador.",
+        },
+        "4": {
+            id: "4",
+            name: "Xbox Game Pass Ultimate",
+            price: 15.0,
+            image_url:
+                "https://images.unsplash.com/photo-1627856014759-2a01d6e2dd2e?q=80&w=1000&auto=format&fit=crop",
+            category: "Suscripciones",
+            description:
+                "Accede a más de 100 juegos de alta calidad con Game Pass Ultimate.",
+        },
+    };
+
+    product = MOCK_PRODUCTS[slug as keyof typeof MOCK_PRODUCTS] || {
+        id: slug,
+        name: "Producto No Encontrado",
+        price: 0.0,
+        image_url: "/placeholder.png",
+        category: "General",
+        description: "El producto que buscas no está disponible o no existe.",
+    };
+}
+---
+
+<Layout title={`${product.name} | KrostyShop`}>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            {/* Left: Image Section */}
+            <div class="relative">
+                {/* Main Image Card with Effects */}
+                <div
+                    class="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(245,158,11,0.1)] group"
+                >
+                    <img
+                        src={product.image_url || "/placeholder.png"}
+                        alt={product.name}
+                        class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1627856014759-2a01d6e2dd2e?q=80&w=1000&auto=format&fit=crop';"
+                    />
+
+                    {/* Brand Banner Overlay */}
+                    <div class="absolute top-6 left-6">
+                        <span
+                            class="bg-black/80 backdrop-blur-md text-white font-bold px-4 py-2 rounded border border-white/20 uppercase tracking-widest text-sm"
+                        >
+                            KROSTY SHOP
+                        </span>
+                    </div>
+
+                    {/* Texture Overlay */}
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"
+                    >
+                    </div>
+                </div>
+            </div>
+
+            {/* Right: Details Section */}
+            <div class="space-y-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span
+                            class="text-xs font-bold text-primary uppercase tracking-widest"
+                            >Compra de Gift Cards</span
+                        >
+                        <span class="text-gray-500">|</span>
+                        <span
+                            class="text-xs font-bold text-gray-400 uppercase tracking-widest"
+                            >Compra de {product.category}</span
+                        >
+                    </div>
+                    <h1
+                        class="text-4xl md:text-5xl font-black text-white uppercase leading-none mb-6 tracking-tighter"
+                    >
+                        {product.name}
+                    </h1>
+                    <p class="text-gray-300 text-sm leading-relaxed max-w-lg">
+                        {
+                            product.description ||
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                        }
+                    </p>
+                </div>
+
+                {/* React Component for Interactive Selection & Cart */}
+                <ProductDetail client:load product={product} />
+
+                {/* Secure Info */}
+                <div class="flex flex-wrap gap-6 pt-6 border-t border-white/10">
+                    <div
+                        class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider"
+                    >
+                        <svg
+                            class="w-5 h-5 text-[#25D366]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            ></path></svg
+                        >
+                        Instantáneo
+                    </div>
+                    <div
+                        class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider"
+                    >
+                        <svg
+                            class="w-5 h-5 text-[#25D366]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                            ></path></svg
+                        >
+                        Privado, Seguro
+                    </div>
+                    <div
+                        class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider"
+                    >
+                        <svg
+                            class="w-5 h-5 text-primary"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                            ></path></svg
+                        >
+                        Entrega via Email
+                    </div>
+                </div>
+
+                {/* How to Redeem */}
+                <div class="pt-12">
+                    <h3 class="text-xl font-black text-primary uppercase mb-4">
+                        ¿Cómo canjearlo?
+                    </h3>
+                    <div
+                        class="bg-[#18181b] p-6 rounded-xl border border-white/5 space-y-4 text-sm text-gray-300"
+                    >
+                        <p>1. Inicia sesión en tu cuenta.</p>
+                        <p>2. Introduce el código en la sección de canje.</p>
+                        <p>3. ¡Disfruta de tu saldo al instante!</p>
+                        <p class="text-xs text-gray-500 mt-4 italic">
+                            A consetetur voluptatem nisi et voluptatem
+                            blanditiis aut dicta doloremque ut quasi molestiae.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>

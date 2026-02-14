@@ -1,0 +1,10 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { AdminOrderDetail } from "../../../components/admin/AdminOrderDetail";
+
+const { id } = Astro.params;
+---
+
+<Layout title={`Orden #${id} | Admin Panel`}>
+    <AdminOrderDetail client:only="react" orderId={id!} />
+</Layout>

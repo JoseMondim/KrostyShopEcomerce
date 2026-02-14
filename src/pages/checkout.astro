@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { CheckoutComponent } from "../components/commerce/CheckoutComponent";
+---
+
+<Layout title="Checkout | KrostyShop">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <CheckoutComponent client:load />
+  </div>
+</Layout>

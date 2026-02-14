@@ -1,0 +1,10 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { UserOrderDetail } from "../../../components/profile/UserOrderDetail";
+
+const { id } = Astro.params;
+---
+
+<Layout title={`Mi Orden #${id} | Krosty Shop`}>
+    <UserOrderDetail client:only="react" orderId={id!} />
+</Layout>

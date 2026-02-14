@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { ProductCatalog } from "../components/commerce/ProductCatalog";
+import { supabase } from "../lib/supabase";
+
+let products = [];
+
+// Fetch ALL products for the client-side catalog
+if (supabase) {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("name");
+
+    if (!error && data) {
+        products = data;
+    }
+}
+---
+
+<Layout title="Tienda | KrostyShop">
+    <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-8">
+        <h1 class="text-4xl font-black text-white mb-8 uppercase tracking-wide">
+            Catálogo <span class="text-primary">KrostyShop</span>
+        </h1>
+
+        <ProductCatalog client:load initialProducts={products} />
+    </div>
+</Layout>

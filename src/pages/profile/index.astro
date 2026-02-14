@@ -1,0 +1,10 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { UserOrderList } from "../../components/profile/UserOrderList";
+---
+
+<Layout title="Mi Perfil | Krosty Shop">
+    <div className="max-w-4xl mx-auto px-4 py-8">
+        <UserOrderList client:only="react" />
+    </div>
+</Layout>
